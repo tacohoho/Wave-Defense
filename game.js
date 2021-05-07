@@ -23,6 +23,9 @@ var config = {
 
 var game = new Phaser.Game(config);
 
+// dictionary of keyboard inputs
+var keyboard = {};
+
 function preload () {
   this.load.image('sky', 'assets/sky.png');
   this.load.spritesheet('character', 'assets/matt_char.png', { frameWidth: 32, frameHeight: 32 });
@@ -34,19 +37,24 @@ function create () {
 
   player.setCollideWorldBounds(true);
 
-  // Enables movement of player with WASD keys
-  this.input.keyboard.on('keydown_W', function (event) {
-      player.setAccelerationY(-800);
-  });
-  this.input.keyboard.on('keydown_S', function (event) {
-      player.setAccelerationY(800);
-  });
-  this.input.keyboard.on('keydown_A', function (event) {
-      player.setAccelerationX(-800);
-  });
-  this.input.keyboard.on('keydown_D', function (event) {
-      player.setAccelerationX(800);
-  });
+  keyboard["W"] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+  keyboard["A"] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+  keyboard["S"] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+  keyboard["D"] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+
+  // Horizontal movement
+  if (keyboard["A"].isDown) {
+    this.player.body.setVelocityX(-80);
+  } else if (keyboard["D"].isDown) {
+    this.player.body.setVelocityX(80);
+  }
+
+  // Vertical movement
+  if (keyboard["W"].isDown) {
+    this.player.body.setVelocityY(-80);
+  } else if (keyboard["S"].isDown) {
+    this.player.body.setVelocityY(80);
+  }
 }
 
 function update () {
