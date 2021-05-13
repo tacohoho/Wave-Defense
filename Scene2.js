@@ -42,15 +42,19 @@ class Scene2 extends Phaser.Scene {
     });
 
     this.enemies = this.physics.add.group({
-      classType: Walker,
+      classType: Phaser.GameObjects.Sprite,
       runChildUpdate: true
     });
 
-    // probably change this later
     var maxEnemies = 3;
     for (var i = 0; i < maxEnemies; i++) {
-      var enemy = this.enemies.create('walker');
-      enemy.setRandomPosition();
+      var walker = new Walker(this);
+      this.enemies.add(walker, true);
+      walker.setRandomPosition();
+
+      var shooter = new Shooter(this);
+      this.enemies.add(shooter, true);
+      shooter.setRandomPosition();
     }
 
     this.reticle = this.physics.add.sprite(100, 460, 'target');
@@ -91,22 +95,25 @@ class Scene2 extends Phaser.Scene {
 
     // collision between enemy and bullets
     this.physics.add.overlap(this.enemies, this.playerBullets, this.hitEnemy, null, this);
+
+    // collision between enemies so they don't overlap
+    this.physics.add.collider(this.enemies, this.enemies);
   }
 
   update() {
     this.player.setVelocity(0);
     // Horizontal movement
     if (this.keyboard['A'].isDown) {
-      this.player.setVelocityX(-160);
+      this.player.setVelocityX(-playerStats.speed);
     } else if (this.keyboard['D'].isDown) {
-      this.player.setVelocityX(160);
+      this.player.setVelocityX(playerStats.speed);
     }
 
     // Vertical movement
     if (this.keyboard['W'].isDown) {
-      this.player.setVelocityY(-160);
+      this.player.setVelocityY(-playerStats.speed);
     } else if (this.keyboard['S'].isDown) {
-      this.player.setVelocityY(160);
+      this.player.setVelocityY(playerStats.speed);
     }
 
     // Make reticle move with player
@@ -119,8 +126,10 @@ class Scene2 extends Phaser.Scene {
     // Constrain position of constrainReticle
     this.constrainReticle(this.reticle);
 
-    // update enemy behavior
-    // this.moveEnemies();
+    // update enemy
+    this.enemies.getChildren().forEach((enemy) => {
+      enemy.changeDirection(this.player);
+    });
   }
 
   // Ensures reticle does not move offscreen
@@ -151,13 +160,4 @@ class Scene2 extends Phaser.Scene {
 
     enemy.health -= 1;
   }
-
-  // moveEnemies() {
-  //   this.enemies.getChildren().forEach((enemy) => {
-  //     enemy.playerX = this.player.x;
-  //     enemy.playerY = this.player.y;
-  //     enemy.body.setVelocity(enemy.xSpeed, enemy.ySpeed);
-  //     // console.log('PlayerX ' + enemy.playerX + ' PlayerY ' + enemy.playerY);
-  //   });
-  // }
 }

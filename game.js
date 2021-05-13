@@ -1,3 +1,9 @@
+var playerStats = {
+  health: 3,
+  fireRate: 1,
+  speed: 160
+}
+
 var config = {
   type: Phaser.AUTO,
   width: 800,
