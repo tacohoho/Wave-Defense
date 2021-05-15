@@ -41,6 +41,11 @@ class Scene2 extends Phaser.Scene {
       runChildUpdate: true
     });
 
+    this.enemyBullets = this.physics.add.group({
+      classType: Bullet,
+      runChildUpdate: true
+    })
+
     this.enemies = this.physics.add.group({
       classType: Phaser.GameObjects.Sprite,
       runChildUpdate: true
@@ -98,6 +103,8 @@ class Scene2 extends Phaser.Scene {
 
     // collision between enemies so they don't overlap
     this.physics.add.collider(this.enemies, this.enemies);
+
+    this.physics.add.collider(this.enemies, this.player, this.touchPlayer, null, this);
   }
 
   update() {
@@ -129,7 +136,29 @@ class Scene2 extends Phaser.Scene {
     // update enemy
     this.enemies.getChildren().forEach((enemy) => {
       enemy.changeDirection(this.player);
+
+      if (enemy.name === 'Shooter' && enemy.body.velocity === 0 && enemy.canShoot) {
+        enemy.canShoot = false;
+        // Get bullet from bullets group
+        var bullet = this.enemyBullets.get();
+
+        if (bullet) {
+          bullet.fire(this.enemy, this.player);
+          this.shootSound.play();
+        }
+
+        this.time.addEvent({
+          delay: enemy.fireRate,
+          callback: function() {
+            enemy.canShoot = true;
+          },
+        });
+      }
     });
+
+    if (playerStats.health === 0) {
+      this.player.destroy();
+    }
   }
 
   // Ensures reticle does not move offscreen
@@ -159,5 +188,26 @@ class Scene2 extends Phaser.Scene {
     }
 
     enemy.health -= 1;
+  }
+
+  // after being hit, the player will be invulnerable for 1 second and it will be shown by his opacity
+  setInvincible(player) {
+    player.alpha = 0.5;
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: function() {
+        player.alpha = 1;
+      },
+    });
+  }
+
+  touchPlayer(player, enemy) {
+    if (player.alpha < 1) {
+      return;
+    }
+    playerStats.health -= 1;
+
+    this.setInvincible(player);
   }
 }
