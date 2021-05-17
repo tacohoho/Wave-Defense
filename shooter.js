@@ -7,6 +7,10 @@ class Shooter extends Phaser.GameObjects.Sprite {
     this.ySpeed = 0;
     this.direction = 0;
     this.distFromPlayer = 0;
+    this.canShoot = true;
+    this.bulletCounter = 0;
+    this.fireRate = 2000;
+    this.standStill = false;
     // this.attackSpeed = 0;
   }
 
@@ -31,9 +35,11 @@ class Shooter extends Phaser.GameObjects.Sprite {
     // add code here for behavior
     if (this.distFromPlayer < 120) {
       this.body.setVelocity(0);
+      this.standStill = true;
     }
     else {
       this.body.setVelocity(this.xSpeed, this.ySpeed);
+      this.standStill = false;
     }
 
     if (this.health === 0) {

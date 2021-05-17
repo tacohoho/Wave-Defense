@@ -53,9 +53,9 @@ class Scene2 extends Phaser.Scene {
 
     var maxEnemies = 3;
     for (var i = 0; i < maxEnemies; i++) {
-      var walker = new Walker(this);
-      this.enemies.add(walker, true);
-      walker.setRandomPosition();
+      // var walker = new Walker(this);
+      // this.enemies.add(walker, true);
+      // walker.setRandomPosition();
 
       var shooter = new Shooter(this);
       this.enemies.add(shooter, true);
@@ -101,6 +101,9 @@ class Scene2 extends Phaser.Scene {
     // collision between enemy and bullets
     this.physics.add.overlap(this.enemies, this.playerBullets, this.hitEnemy, null, this);
 
+    //collision between enemy bullets and player
+    this.physics.add.overlap(this.player, this.enemyBullets, this.touchPlayer, null, this);
+
     // collision between enemies so they don't overlap
     this.physics.add.collider(this.enemies, this.enemies);
 
@@ -137,15 +140,12 @@ class Scene2 extends Phaser.Scene {
     this.enemies.getChildren().forEach((enemy) => {
       enemy.changeDirection(this.player);
 
-      if (enemy.name === 'Shooter' && enemy.body.velocity === 0 && enemy.canShoot) {
-        enemy.canShoot = false;
-        // Get bullet from bullets group
-        var bullet = this.enemyBullets.get();
+      var bullet = this.enemyBullets.get();
+      if (bullet && enemy.canShoot && enemy.standStill) {
 
-        if (bullet) {
-          bullet.fire(this.enemy, this.player);
-          this.shootSound.play();
-        }
+        bullet.fire(enemy, this.player);
+        this.shootSound.play();
+        enemy.canShoot = false;
 
         this.time.addEvent({
           delay: enemy.fireRate,
@@ -153,6 +153,7 @@ class Scene2 extends Phaser.Scene {
             enemy.canShoot = true;
           },
         });
+
       }
     });
 
