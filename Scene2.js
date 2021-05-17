@@ -198,7 +198,7 @@ class Scene2 extends Phaser.Scene {
 
   hitPlayer(player, bullet) {
     bullet.destroy();
-    this.touchPlayer();
+    this.touchPlayer(player, bullet);
   }
 
   // after being hit, the player will be invulnerable for 1 second and it will be shown by his opacity
