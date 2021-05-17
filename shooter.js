@@ -8,7 +8,6 @@ class Shooter extends Phaser.GameObjects.Sprite {
     this.direction = 0;
     this.distFromPlayer = 0;
     this.canShoot = true;
-    this.bulletCounter = 0;
     this.fireRate = 2000;
     this.standStill = false;
     // this.attackSpeed = 0;

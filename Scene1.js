@@ -14,6 +14,7 @@ class Scene1 extends Phaser.Scene {
     this.load.image('walker', 'assets/spritesheets/coppergolem.png');
     this.load.image('shooter', 'assets/spritesheets/dark-ent.png');
     this.load.image('background', 'assets/images/sky.png');
+    this.load.image('tank', 'assets/spritesheets/demon.png');
 
     this.load.bitmapFont('pixelFont', 'assets/fonts/font.png', 'assets/fonts/font.xml');
 

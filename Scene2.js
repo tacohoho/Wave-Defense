@@ -53,13 +53,17 @@ class Scene2 extends Phaser.Scene {
 
     var maxEnemies = 3;
     for (var i = 0; i < maxEnemies; i++) {
-      // var walker = new Walker(this);
-      // this.enemies.add(walker, true);
-      // walker.setRandomPosition();
+      var walker = new Walker(this);
+      this.enemies.add(walker, true);
+      walker.setRandomPosition();
 
       var shooter = new Shooter(this);
       this.enemies.add(shooter, true);
       shooter.setRandomPosition();
+
+      var tank = new Tank(this);
+      this.enemies.add(tank, true);
+      tank.setRandomPosition();
     }
 
     this.reticle = this.physics.add.sprite(100, 460, 'target');
@@ -107,6 +111,7 @@ class Scene2 extends Phaser.Scene {
     // collision between enemies so they don't overlap
     this.physics.add.collider(this.enemies, this.enemies);
 
+    // collision between player and enemy
     this.physics.add.collider(this.enemies, this.player, this.touchPlayer, null, this);
   }
 
