@@ -106,7 +106,7 @@ class Scene2 extends Phaser.Scene {
     this.physics.add.overlap(this.enemies, this.playerBullets, this.hitEnemy, null, this);
 
     //collision between enemy bullets and player
-    this.physics.add.overlap(this.player, this.enemyBullets, this.touchPlayer, null, this);
+    this.physics.add.overlap(this.player, this.enemyBullets, this.hitPlayer, null, this);
 
     // collision between enemies so they don't overlap
     this.physics.add.collider(this.enemies, this.enemies);
@@ -194,6 +194,11 @@ class Scene2 extends Phaser.Scene {
     }
 
     enemy.health -= 1;
+  }
+
+  hitPlayer(player, bullet) {
+    bullet.destroy();
+    touchPlayer();
   }
 
   // after being hit, the player will be invulnerable for 1 second and it will be shown by his opacity

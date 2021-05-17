@@ -5,16 +5,25 @@ class Scene1 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('character', 'assets/spritesheets/matt_char.png', {
+    this.load.spritesheet('character', 'assets/spritesheets/main_char.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet('walker', 'assets/spritesheets/walker.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet('shooter', 'assets/spritesheets/shooter.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet('tank', 'assets/spritesheets/tank.png', {
       frameWidth: 32,
       frameHeight: 32
     });
     this.load.image('bullet', 'assets/spritesheets/giant-worm.png');
     this.load.image('target', 'assets/spritesheets/attack-icon.png');
-    this.load.image('walker', 'assets/spritesheets/coppergolem.png');
-    this.load.image('shooter', 'assets/spritesheets/dark-ent.png');
     this.load.image('background', 'assets/images/sky.png');
-    this.load.image('tank', 'assets/spritesheets/demon.png');
 
     this.load.bitmapFont('pixelFont', 'assets/fonts/font.png', 'assets/fonts/font.xml');
 
