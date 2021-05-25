@@ -2,7 +2,7 @@ class Walker extends Phaser.GameObjects.Sprite {
   constructor(scene) {
     super(scene, 0, 0, 'walker');
     this.health = 3;
-    this.speed = 80;
+    this.speed = 40;
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.direction = 0;

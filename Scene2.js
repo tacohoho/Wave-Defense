@@ -23,12 +23,13 @@ class Scene2 extends Phaser.Scene {
     this.scoreBoard = this.add.bitmapText(this.player.x - 100, this.player.y - 100, 'pixelFont', 'SCORE 0', 16);
 
     // sounds
+    // maybe make a config for shootSound as well. It is a bit loud
     this.shootSound = this.sound.add('audio_shoot');
     this.music = this.sound.add('music');
 
     var musicConfig = {
       mute: false,
-      volume: 1,
+      volume: 0.5,
       detune: 0,
       seek: 0,
       loop: true,
@@ -50,21 +51,6 @@ class Scene2 extends Phaser.Scene {
       classType: Phaser.GameObjects.Sprite,
       runChildUpdate: true
     });
-
-    var maxEnemies = 3;
-    for (var i = 0; i < maxEnemies; i++) {
-      var walker = new Walker(this);
-      this.enemies.add(walker, true);
-      walker.setRandomPosition();
-
-      var shooter = new Shooter(this);
-      this.enemies.add(shooter, true);
-      shooter.setRandomPosition();
-
-      var tank = new Tank(this);
-      this.enemies.add(tank, true);
-      tank.setRandomPosition();
-    }
 
     this.reticle = this.physics.add.sprite(100, 460, 'target');
     this.reticle.setDisplaySize(10, 10)/*.setCollideWorldBounds(true)*/;
@@ -113,6 +99,13 @@ class Scene2 extends Phaser.Scene {
 
     // collision between player and enemy
     this.physics.add.collider(this.enemies, this.player, this.touchPlayer, null, this);
+
+    // pickup stuff
+    // this.physics.add.collider(this.player, this.pickups, this.pickup, null, this);
+
+    // variables used for waves
+    this.waveDone = true;
+    this.maxEnemies = 3;
   }
 
   update() {
@@ -164,6 +157,13 @@ class Scene2 extends Phaser.Scene {
 
     if (playerStats.health === 0) {
       this.player.destroy();
+    }
+
+    if (this.waveDone) {
+      this.spawnWaves(0, this.maxEnemies);
+      this.waveDone = false;
+      this.maxEnemies++;
+      //alert('next wave');
     }
   }
 
@@ -220,5 +220,36 @@ class Scene2 extends Phaser.Scene {
     playerStats.health -= 1;
 
     this.setInvincible(player);
+  }
+
+  spawnWaves(waveCount, maxEnemies) {
+    if (waveCount === 5) {
+      this.waveDone = true;
+      return;
+    }
+
+    var maxEnemies = 3;
+    for (var i = 0; i < maxEnemies; i++) {
+      var walker = new Walker(this);
+      this.enemies.add(walker, true);
+      walker.setRandomPosition(0, 0, 800, 0);
+
+      var shooter = new Shooter(this);
+      this.enemies.add(shooter, true);
+      shooter.setRandomPosition(0, 0, 800, 0);
+
+      var tank = new Tank(this);
+      this.enemies.add(tank, true);
+      tank.setRandomPosition(0, 0, 800, 0);
+    }
+    // for some reason doesn't work if i use spawnWaves function instead of creating a new one
+    this.time.addEvent({
+      delay: 10000,
+      callback: function() {
+        //alert('10 seconds');
+        this.spawnWaves(++waveCount, maxEnemies);
+      },
+      callbackScope: this,
+    });
   }
 }
