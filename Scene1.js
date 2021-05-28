@@ -21,9 +21,9 @@ class Scene1 extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.image('bullet', 'assets/spritesheets/giant-worm.png');
+    this.load.image('bullet', 'assets/images/big_bullet.png');
     this.load.image('target', 'assets/spritesheets/attack-icon.png');
-    this.load.image('background', 'assets/images/sky.png');
+    this.load.image('background', 'assets/images/map1_v01.png');
 
     this.load.bitmapFont('pixelFont', 'assets/fonts/font.png', 'assets/fonts/font.xml');
 

@@ -6,7 +6,7 @@ class Scene2 extends Phaser.Scene {
 
   create() {
     // background
-    this.add.image(400, 300, 'background');
+    this.add.image(270, 202.5, 'background');
 
     this.keyboard = {};
     // add keys to keyboard
@@ -15,7 +15,7 @@ class Scene2 extends Phaser.Scene {
     this.keyboard['S'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     this.keyboard['D'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
-    this.player = this.physics.add.sprite(100, 450, 'character');
+    this.player = this.physics.add.sprite(100, 300, 'character');
     this.player.setCollideWorldBounds(true);
 
     // scoreboard
@@ -52,11 +52,11 @@ class Scene2 extends Phaser.Scene {
       runChildUpdate: true
     });
 
-    this.reticle = this.physics.add.sprite(100, 460, 'target');
+    this.reticle = this.physics.add.sprite(100, 300, 'target');
     this.reticle.setDisplaySize(10, 10)/*.setCollideWorldBounds(true)*/;
 
     // code for camera below
-    this.cameras.main.setZoom(3);
+    this.cameras.main.setZoom(2);
     this.cameras.main.startFollow(this.player);
     // this.cameras.main.setBounds(0, 0, 800, 600);
 
@@ -99,9 +99,6 @@ class Scene2 extends Phaser.Scene {
 
     // collision between player and enemy
     this.physics.add.collider(this.enemies, this.player, this.touchPlayer, null, this);
-
-    // pickup stuff
-    // this.physics.add.collider(this.player, this.pickups, this.pickup, null, this);
 
     // variables used for waves
     this.waveDone = true;
@@ -174,15 +171,15 @@ class Scene2 extends Phaser.Scene {
 
     // Ensures reticle cannot be moved offscreen (player follow)
     // reticle movement limit calculated by game width/height / (zoom * 2)
-    if (distX > 133)
-      reticle.x = this.player.x + 133;
-    else if (distX < -133)
-      reticle.x = this.player.x - 133;
+    if (distX > 135)
+      reticle.x = this.player.x + 135;
+    else if (distX < -135)
+      reticle.x = this.player.x - 135;
 
-    if (distY > 100)
-      reticle.y = this.player.y + 100;
-    else if (distY < -100)
-      reticle.y = this.player.y - 100;
+    if (distY > 101.25)
+      reticle.y = this.player.y + 101.25;
+    else if (distY < -101.25)
+      reticle.y = this.player.y - 101.25;
   }
 
   hitEnemy(enemy, bullet) {
