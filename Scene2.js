@@ -76,9 +76,17 @@ class Scene2 extends Phaser.Scene {
       // Get bullet from bullets group
       var bullet = this.playerBullets.get();
 
-      if (bullet) {
+      if (bullet && playerStats.canShoot) {
         bullet.fire(this.player, this.reticle);
         this.shootSound.play();
+        playerStats.canShoot = false;
+
+        this.time.addEvent({
+          delay: playerStats.fireRate,
+          callback: function() {
+            playerStats.canShoot = true;
+          },
+        });
       }
     }, this);
 
@@ -236,6 +244,7 @@ class Scene2 extends Phaser.Scene {
       return;
     }
     playerStats.health -= 1;
+    this.updateHealth();
 
     this.setInvincible(player);
   }
@@ -275,6 +284,46 @@ class Scene2 extends Phaser.Scene {
   }
 
   updateHealth() {
+    this.heart1.destroy();
+    this.heart2.destroy();
+    this.heart3.destroy();
 
+    switch(playerStats.health) {
+      case 0:
+        // replace with empty heart sprite later
+        this.heart1.visible = false;
+        this.heart2.visible = false;
+        this.heart3.visible = false;
+        break;
+      case 1:
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'half_heart');
+        this.heart2.visible = false;
+        this.heart3.visible = false;
+        break;
+      case 2:
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
+        this.heart2.visible = false;
+        this.heart3.visible = false;
+        break;
+      case 3:
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'half_heart');
+        this.heart3.visible = false;
+        break;
+      case 4:
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
+        this.heart3.visible = false;
+        break;
+      case 5:
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'half_heart');
+        break;
+      default:
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'full_heart');
+    }
   }
 }
