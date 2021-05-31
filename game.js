@@ -1,7 +1,8 @@
 var playerStats = {
-  health: 3,
+  health: 6,
   fireRate: 1,
-  speed: 160
+  speed: 160,
+  waveNumber: 1
 }
 
 var config = {

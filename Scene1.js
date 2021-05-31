@@ -24,6 +24,8 @@ class Scene1 extends Phaser.Scene {
     this.load.image('bullet', 'assets/images/big_bullet.png');
     this.load.image('target', 'assets/spritesheets/attack-icon.png');
     this.load.image('background', 'assets/images/map1_v01.png');
+    this.load.image('full_heart', 'assets/images/full_heart_v01.png');
+    this.load.image('half_heart', 'assets/images/half_heart_v01.png');
 
     this.load.bitmapFont('pixelFont', 'assets/fonts/font.png', 'assets/fonts/font.xml');
 

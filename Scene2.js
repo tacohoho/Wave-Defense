@@ -20,7 +20,15 @@ class Scene2 extends Phaser.Scene {
 
     // scoreboard
     this.score = 0;
-    this.scoreBoard = this.add.bitmapText(this.player.x - 100, this.player.y - 100, 'pixelFont', 'SCORE 0', 16);
+    this.scoreBoard = this.add.bitmapText(this.player.x, this.player.y, 'pixelFont', 'SCORE 0', 16);
+
+    // wave number bitmapText
+    // this.waveText = this.add.bitmapText(this.player.x, this.player.y - 70, 'pixelFont', 'Wave 1', 16);
+
+    // display health
+    this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
+    this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
+    this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'full_heart');
 
     // sounds
     // maybe make a config for shootSound as well. It is a bit loud
@@ -29,7 +37,7 @@ class Scene2 extends Phaser.Scene {
 
     var musicConfig = {
       mute: false,
-      volume: 0.5,
+      volume: 0.25,
       detune: 0,
       seek: 0,
       loop: true,
@@ -102,7 +110,6 @@ class Scene2 extends Phaser.Scene {
 
     // variables used for waves
     this.waveDone = true;
-    this.maxEnemies = 3;
   }
 
   update() {
@@ -126,7 +133,16 @@ class Scene2 extends Phaser.Scene {
     this.reticle.body.velocity.y = this.player.body.velocity.y;
 
     // make scoreboard move with player
-    this.scoreBoard.setPosition(this.player.x - 100, this.player.y - 100);
+    this.scoreBoard.x = this.player.body.position.x - 50;
+    this.scoreBoard.y = this.player.body.position.y - 80;
+
+    // make health move with player
+    this.heart1.x = this.player.body.position.x - 115;
+    this.heart1.y = this.player.body.position.y - 75;
+    this.heart2.x = this.player.body.position.x - 95;
+    this.heart2.y = this.player.body.position.y - 75;
+    this.heart3.x = this.player.body.position.x - 75;
+    this.heart3.y = this.player.body.position.y - 75;
 
     // Constrain position of constrainReticle
     this.constrainReticle(this.reticle);
@@ -157,9 +173,9 @@ class Scene2 extends Phaser.Scene {
     }
 
     if (this.waveDone) {
-      this.spawnWaves(0, this.maxEnemies);
+      this.spawnWaves(0, playerStats.waveNumber);
       this.waveDone = false;
-      this.maxEnemies++;
+      playerStats.waveNumber++;
       //alert('next wave');
     }
   }
@@ -219,32 +235,35 @@ class Scene2 extends Phaser.Scene {
     this.setInvincible(player);
   }
 
-  spawnWaves(waveCount, maxEnemies) {
-    if (waveCount === 5) {
+  spawnWaves(subWaveCount, waveNumber) {
+    if (subWaveCount === 5) {
       this.waveDone = true;
       return;
     }
 
-    var maxEnemies = 3;
-    for (var i = 0; i < maxEnemies; i++) {
+    for (var i = 0; i < waveNumber; i++) {
       var walker = new Walker(this);
       this.enemies.add(walker, true);
       walker.setRandomPosition(0, 0, 800, 0);
 
-      var shooter = new Shooter(this);
-      this.enemies.add(shooter, true);
-      shooter.setRandomPosition(0, 0, 800, 0);
+      if (waveNumber > 1) {
+        var shooter = new Shooter(this);
+        this.enemies.add(shooter, true);
+        shooter.setRandomPosition(0, 0, 800, 0);
+      }
 
-      var tank = new Tank(this);
-      this.enemies.add(tank, true);
-      tank.setRandomPosition(0, 0, 800, 0);
+      if (waveNumber > 2) {
+        var tank = new Tank(this);
+        this.enemies.add(tank, true);
+        tank.setRandomPosition(0, 0, 800, 0);
+      }
     }
     // for some reason doesn't work if i use spawnWaves function instead of creating a new one
     this.time.addEvent({
       delay: 10000,
       callback: function() {
         //alert('10 seconds');
-        this.spawnWaves(++waveCount, maxEnemies);
+        this.spawnWaves(++subWaveCount, waveNumber);
       },
       callbackScope: this,
     });
