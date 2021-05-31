@@ -23,7 +23,7 @@ class Scene2 extends Phaser.Scene {
     this.scoreBoard = this.add.bitmapText(this.player.x, this.player.y, 'pixelFont', 'SCORE 0', 16);
 
     // wave number bitmapText
-    // this.waveText = this.add.bitmapText(this.player.x, this.player.y - 70, 'pixelFont', 'Wave 1', 16);
+    this.waveText = this.add.bitmapText(this.player.x, this.player.y - 70, 'pixelFont', 'Wave 1', 16);
 
     // display health
     this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
@@ -136,6 +136,10 @@ class Scene2 extends Phaser.Scene {
     this.scoreBoard.x = this.player.body.position.x - 50;
     this.scoreBoard.y = this.player.body.position.y - 80;
 
+    // make wave number text move with player
+    this.waveText.x = this.player.body.position.x + 10;
+    this.waveText.y = this.player.body.position.y - 80;
+
     // make health move with player
     this.heart1.x = this.player.body.position.x - 115;
     this.heart1.y = this.player.body.position.y - 75;
@@ -176,6 +180,7 @@ class Scene2 extends Phaser.Scene {
       this.spawnWaves(0, playerStats.waveNumber);
       this.waveDone = false;
       playerStats.waveNumber++;
+      this.waveText.text = 'Wave ' + playerStats.waveNumber;
       //alert('next wave');
     }
   }
@@ -241,7 +246,7 @@ class Scene2 extends Phaser.Scene {
       return;
     }
 
-    for (var i = 0; i < waveNumber; i++) {
+    for (var i = 0; i < waveNumber + 2; i++) {
       var walker = new Walker(this);
       this.enemies.add(walker, true);
       walker.setRandomPosition(0, 0, 800, 0);
@@ -267,5 +272,9 @@ class Scene2 extends Phaser.Scene {
       },
       callbackScope: this,
     });
+  }
+
+  updateHealth() {
+
   }
 }
