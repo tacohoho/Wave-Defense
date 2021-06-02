@@ -2,7 +2,8 @@
 // https://phaser.io/examples/v3/view/games/top-down-shooter/topdowncombatmechanics#
 class Bullet extends Phaser.GameObjects.Image {
   constructor(scene) {
-    super(scene, 0, 0, 'bullet');
+    // theres a bug where a bullet spawns in this location / made it so the bug is not visible
+    super(scene, -1000, -1000, 'bullet');
     this.speed = 0.125;
     this.born = 0;
     this.direction = 0;
