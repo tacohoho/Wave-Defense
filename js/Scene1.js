@@ -21,6 +21,10 @@ class Scene1 extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+    this.load.spritesheet('flamethrower', 'assets/spritesheets/flamethrower.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
     this.load.image('bullet', 'assets/images/big_bullet.png');
     this.load.image('target', 'assets/spritesheets/attack-icon.png');
     this.load.image('background', 'assets/images/map1_v01.png');

@@ -6,7 +6,6 @@ class Walker extends Phaser.GameObjects.Sprite {
     this.xSpeed = 0;
     this.ySpeed = 0;
     this.direction = 0;
-    // this.attackSpeed = 0;
   }
 
   changeDirection(player) {

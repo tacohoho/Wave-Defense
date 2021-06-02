@@ -1,7 +1,7 @@
 class Tank extends Phaser.GameObjects.Sprite {
   constructor(scene) {
     super(scene, 0, 0, 'tank');
-    this.health = 6;
+    this.health = 9;
     this.speed = 20;
     this.xSpeed = 0;
     this.ySpeed = 0;
