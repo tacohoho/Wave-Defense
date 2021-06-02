@@ -30,6 +30,8 @@ class Scene2 extends Phaser.Scene {
     this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
     this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'full_heart');
 
+    this.startImg = this.physics.add.image(270, 202.5, 'character');
+
     // sounds
     // maybe make a config for shootSound as well. It is a bit loud
     this.shootSound = this.sound.add('audio_shoot');
@@ -116,6 +118,9 @@ class Scene2 extends Phaser.Scene {
     // collision between player and enemy
     this.physics.add.collider(this.enemies, this.player, this.touchPlayer, null, this);
 
+    // collision between player and wave start image
+    this.physics.add.overlap(this.startImg, this.player, this.startWave, null, this);
+
     // variables used for waves
     this.waveDone = true;
   }
@@ -185,11 +190,7 @@ class Scene2 extends Phaser.Scene {
     }
 
     if (this.waveDone) {
-      this.spawnWaves(0, playerStats.waveNumber);
-      this.waveDone = false;
-      playerStats.waveNumber++;
-      this.waveText.text = 'Wave ' + playerStats.waveNumber;
-      //alert('next wave');
+      this.startImg.enableBody(true, 270, 202.5, true, true);
     }
   }
 
@@ -281,6 +282,14 @@ class Scene2 extends Phaser.Scene {
       },
       callbackScope: this,
     });
+  }
+
+  startWave() {
+    this.spawnWaves(0, playerStats.waveNumber);
+    this.waveDone = false;
+    playerStats.waveNumber++;
+    this.waveText.text = 'Wave ' + playerStats.waveNumber;
+    this.startImg.disableBody(true, true);
   }
 
   updateHealth() {
