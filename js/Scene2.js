@@ -8,6 +8,15 @@ class Scene2 extends Phaser.Scene {
     // background
     this.add.image(270, 202.5, 'background');
 
+    // add props and randomize position
+    this.props = this.physics.add.staticGroup();
+    var width = Math.random() * 382 + 79;
+    var height = Math.random() * 339 + 33;
+    this.props.create(width, height, 'cactus');
+    this.props.create(width, height, 'rocks');
+    this.props.create(width, height, 'rock_bush');
+    this.props.create(width, height, 'stop_sign');
+
     this.keyboard = {};
     // add keys to keyboard
     this.keyboard['W'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -24,6 +33,9 @@ class Scene2 extends Phaser.Scene {
 
     // wave number bitmapText
     this.waveText = this.add.bitmapText(this.player.x, this.player.y - 70, 'pixelFont', 'Wave 1', 16);
+
+    // Gun type text
+    // this.gunText = this.add.bitmapText(this.player.x, this.player.y, 'pixelFont', 'Pistol', 16);
 
     // display health
     this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
@@ -121,6 +133,19 @@ class Scene2 extends Phaser.Scene {
     // collision between player and wave start image
     this.physics.add.overlap(this.startImg, this.player, this.startWave, null, this);
 
+    // if props spawn in same place change location
+    this.physics.add.overlap(this.props.getChildren(), this.props.getChildren(), this.propSpawnCheck, null, this);
+
+    // add collisions for props with player bullets and enemies
+    this.physics.add.collider(this.props.getChildren(), this.player);
+    this.physics.add.collider(this.props.getChildren(), this.playerBullets, function(prop, bullet) {
+      bullet.destroy();
+    });
+    this.physics.add.collider(this.props.getChildren(), this.enemies);
+    this.physics.add.collider(this.props.getChildren(), this.enemyBullets, function(prop, bullet) {
+      bullet.destroy();
+    });
+
     // variables used for waves
     this.waveDone = true;
   }
@@ -141,25 +166,8 @@ class Scene2 extends Phaser.Scene {
       this.player.setVelocityY(playerStats.speed);
     }
 
-    // Make reticle move with player
-    this.reticle.body.velocity.x = this.player.body.velocity.x;
-    this.reticle.body.velocity.y = this.player.body.velocity.y;
-
-    // make scoreboard move with player
-    this.scoreBoard.x = this.player.body.position.x - 50;
-    this.scoreBoard.y = this.player.body.position.y - 80;
-
-    // make wave number text move with player
-    this.waveText.x = this.player.body.position.x + 10;
-    this.waveText.y = this.player.body.position.y - 80;
-
-    // make health move with player
-    this.heart1.x = this.player.body.position.x - 115;
-    this.heart1.y = this.player.body.position.y - 75;
-    this.heart2.x = this.player.body.position.x - 95;
-    this.heart2.y = this.player.body.position.y - 75;
-    this.heart3.x = this.player.body.position.x - 75;
-    this.heart3.y = this.player.body.position.y - 75;
+    // update UI to move with player
+    this.moveText();
 
     // Constrain position of constrainReticle
     this.constrainReticle(this.reticle);
@@ -192,6 +200,15 @@ class Scene2 extends Phaser.Scene {
     if (this.waveDone) {
       this.startImg.enableBody(true, 270, 202.5, true, true);
     }
+  }
+
+  propSpawnCheck(prop1, prop2) {
+    // prop undefined
+    var prop = prop2.texture;
+    this.props.remove(prop2, true, true);
+    var width = Math.random() * 382 + 79;
+    var height = Math.random() * 339 + 33;
+    this.props.create(width, height, prop);
   }
 
   // Ensures reticle does not move offscreen
@@ -300,29 +317,29 @@ class Scene2 extends Phaser.Scene {
     switch(playerStats.health) {
       case 0:
         // replace with empty heart sprite later
-        this.heart1.visible = false;
-        this.heart2.visible = false;
-        this.heart3.visible = false;
+        this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'empty_heart');
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'empty_heart');
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'empty_heart');
         break;
       case 1:
         this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'half_heart');
-        this.heart2.visible = false;
-        this.heart3.visible = false;
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'empty_heart');
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'empty_heart');
         break;
       case 2:
         this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
-        this.heart2.visible = false;
-        this.heart3.visible = false;
+        this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'empty_heart');
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'empty_heart');
         break;
       case 3:
         this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
         this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'half_heart');
-        this.heart3.visible = false;
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'empty_heart');
         break;
       case 4:
         this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
         this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
-        this.heart3.visible = false;
+        this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'empty_heart');
         break;
       case 5:
         this.heart1 = this.add.image(this.player.x - 125, this.player.y - 85, 'full_heart');
@@ -334,5 +351,31 @@ class Scene2 extends Phaser.Scene {
         this.heart2 = this.add.image(this.player.x - 105, this.player.y - 85, 'full_heart');
         this.heart3 = this.add.image(this.player.x - 85, this.player.y - 85, 'full_heart');
     }
+  }
+
+  moveText() {
+    // Make reticle move with player
+    this.reticle.body.velocity.x = this.player.body.velocity.x;
+    this.reticle.body.velocity.y = this.player.body.velocity.y;
+
+    // make scoreboard move with player
+    this.scoreBoard.x = this.player.body.position.x - 50;
+    this.scoreBoard.y = this.player.body.position.y - 80;
+
+    // make wave number text move with player
+    this.waveText.x = this.player.body.position.x + 10;
+    this.waveText.y = this.player.body.position.y - 80;
+
+    // make gun text move with player
+    this.waveText.x = this.player.body.position.x + 10;
+    this.waveText.y = this.player.body.position.y - 80;
+
+    // make health move with player
+    this.heart1.x = this.player.body.position.x - 115;
+    this.heart1.y = this.player.body.position.y - 75;
+    this.heart2.x = this.player.body.position.x - 95;
+    this.heart2.y = this.player.body.position.y - 75;
+    this.heart3.x = this.player.body.position.x - 75;
+    this.heart3.y = this.player.body.position.y - 75;
   }
 }

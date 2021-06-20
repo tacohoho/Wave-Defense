@@ -3,7 +3,8 @@ var playerStats = {
   fireRate: 250,
   speed: 160,
   waveNumber: 0,
-  canShoot: true
+  canShoot: true,
+  weapon: ['Pistol', 'Machine Gun']
 }
 
 var config = {

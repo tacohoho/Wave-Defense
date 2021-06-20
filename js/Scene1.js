@@ -30,6 +30,13 @@ class Scene1 extends Phaser.Scene {
     this.load.image('background', 'assets/images/map1_v01.png');
     this.load.image('full_heart', 'assets/images/full_heart_v01.png');
     this.load.image('half_heart', 'assets/images/half_heart_v01.png');
+    this.load.image('empty_heart', 'assets/images/empty_heart_v01.png');
+
+    // propssa
+    this.load.image('cactus', 'assets/images/cactus_prop2.png');
+    this.load.image('rocks', 'assets/images/rocks_prop.png');
+    this.load.image('rock_bush', 'assets/images/rock_bush_prop.png');
+    this.load.image('stop_sign', 'assets/images/stop_sign_prop.png');
 
     this.load.bitmapFont('pixelFont', 'assets/fonts/font.png', 'assets/fonts/font.xml');
 
